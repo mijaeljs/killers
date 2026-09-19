@@ -1,0 +1,41 @@
+﻿@page
+@model TiendaRopa.Pages.Productos.IndexModel
+
+<h1>Catálogo de Productos</h1>
+
+<a asp-page="Crear" class="btn btn-primary">Nuevo Producto</a>
+
+<br />
+<br />
+
+@foreach (var producto in Model.Productos)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@producto.Nombre</h5>
+            <p class="card-text">@producto.Descripcion</p>
+            <p><strong>Precio:</strong> S/ @producto.Precio</p>
+            <p><strong>Categoría:</strong> @producto.Categoria?.Nombre</p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Talla</th>
+                        <th>Color</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var variante in producto.Variantes)
+                    {
+                        <tr>
+                            <td>@variante.Talla?.Nombre</td>
+                            <td>@variante.Color?.Nombre</td>
+                            <td>@variante.Stock</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
