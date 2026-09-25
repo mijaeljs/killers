@@ -21,6 +21,11 @@ public class TiendaRopaContext : DbContext
     public DbSet<Producto> Productos { get; set; }
     public DbSet<ProductoVariante> ProductoVariantes { get; set; }
 
+    // Nuevos DbSets del Módulo 2
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Carrito> Carritos { get; set; }
+    public DbSet<ItemCarrito> ItemsCarrito { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Producto>()
@@ -43,8 +48,22 @@ public class TiendaRopaContext : DbContext
             .WithMany(c => c.Variantes)
             .HasForeignKey(v => v.IdColor);
 
-        modelBuilder.Entity<Producto>()
-            .Property(p => p.Precio)
-            .HasColumnType("decimal(10,2)");
+        // Relación Cliente 1 - 1 Carrito
+        modelBuilder.Entity<Carrito>()
+            .HasOne(c => c.Cliente)
+            .WithOne(cl => cl.Carrito)
+            .HasForeignKey<Carrito>(c => c.IdCliente);
+
+        // Relación Carrito 1 - N ItemCarrito
+        modelBuilder.Entity<ItemCarrito>()
+            .HasOne(i => i.Carrito)
+            .WithMany(c => c.Items)
+            .HasForeignKey(i => i.IdCarrito);
+
+        // Relación ItemCarrito N - 1 ProductoVariante
+        modelBuilder.Entity<ItemCarrito>()
+            .HasOne(i => i.Variante)
+            .WithMany()
+            .HasForeignKey(i => i.IdVariante);
     }
 }

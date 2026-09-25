@@ -1,0 +1,65 @@
+﻿@page
+@model TiendaRopa.Pages.Carrito.IndexModel
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<h2 class="mb-4">Mi Carrito de Compras</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+@if (Model.Carrito == null || !Model.Carrito.Items.Any())
+{
+    <div class="alert alert-warning">
+        El carrito está vacío. <a asp-page="/Productos/Index" class="alert-link">Ver catálogo de productos</a>.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Talla</th>
+                    <th>Color</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Carrito.Items)
+                {
+                    var subtotal = (item.Variante?.Producto?.Precio ?? 0) * item.Cantidad;
+                    <tr>
+                        <td>@item.Variante?.Producto?.Nombre</td>
+                        <td><span class="badge bg-secondary">@item.Variante?.Talla?.Nombre</span></td>
+                        <td><span class="badge bg-info text-dark">@item.Variante?.Color?.Nombre</span></td>
+                        <td>S/ @item.Variante?.Producto?.Precio.ToString("F2")</td>
+                        <td>@item.Cantidad</td>
+                        <td><strong>S/ @subtotal.ToString("F2")</strong></td>
+                        <td>
+                            <form method="post" asp-page-handler="Eliminar">
+                                <input type="hidden" name="idItem" value="@item.IdItemCarrito" />
+                                <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h4>Total a Pagar: <span class="text-success">S/ @Model.Total.ToString("F2")</span></h4>
+        <div>
+            <a asp-page="/Productos/Index" class="btn btn-outline-secondary">Seguir Comprando</a>
+            <button class="btn btn-primary btn-lg" disabled>Proceder al Pago (Módulo 3)</button>
+        </div>
+    </div>
+}

@@ -1,0 +1,47 @@
+﻿@page
+@model TiendaRopa.Pages.Clientes.RegistrarModel
+@{
+    ViewData["Title"] = "Registro de Cliente";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Registrar Cliente</h4>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.MensajeError))
+                {
+                    <div class="alert alert-danger">@Model.MensajeError</div>
+                }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Nombre" class="form-label">Nombre Completo</label>
+                        <input asp-for="Cliente.Nombre" class="form-control" placeholder="Ej. Juan Pérez" />
+                        <span asp-validation-for="Cliente.Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Correo" class="form-label">Correo Electrónico</label>
+                        <input asp-for="Cliente.Correo" class="form-control" type="email" placeholder="juan@gmail.com" />
+                        <span asp-validation-for="Cliente.Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Telefono" class="form-label">Teléfono</label>
+                        <input asp-for="Cliente.Telefono" class="form-control" placeholder="987654321" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cliente.Direccion" class="form-label">Dirección de Envío</label>
+                        <input asp-for="Cliente.Direccion" class="form-control" placeholder="Av. Principal 123" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Registrar e Iniciar Compras</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
