@@ -1,41 +1,115 @@
-﻿@page
+@page
 @model TiendaRopa.Pages.Productos.IndexModel
+@{
+    ViewData["Title"] = "Catálogo de Productos";
+}
 
-<h1>Catálogo de Productos</h1>
-
-<a asp-page="Crear" class="btn btn-primary">Nuevo Producto</a>
-
-<br />
-<br />
-
-@foreach (var producto in Model.Productos)
-{
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">@producto.Nombre</h5>
-            <p class="card-text">@producto.Descripcion</p>
-            <p><strong>Precio:</strong> S/ @producto.Precio</p>
-            <p><strong>Categoría:</strong> @producto.Categoria?.Nombre</p>
-
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Talla</th>
-                        <th>Color</th>
-                        <th>Stock</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var variante in producto.Variantes)
-                    {
-                        <tr>
-                            <td>@variante.Talla?.Nombre</td>
-                            <td>@variante.Color?.Nombre</td>
-                            <td>@variante.Stock</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Catálogo de Productos</h1>
+    <div>
+        <a asp-page="/Carrito/Index" class="btn btn-outline-primary me-2">Ver Carrito</a>
+        <a asp-page="Crear" class="btn btn-success">+ Nuevo Producto</a>
     </div>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!Model.Productos.Any())
+{
+    <div class="alert alert-info">
+        No hay productos registrados actualmente.
+    </div>
+}
+else
+{
+    @foreach (var producto in Model.Productos)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="card-title text-primary">@producto.Nombre</h4>
+                        <p class="card-text text-muted">@producto.Descripcion</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-secondary mb-1">@(producto.Categoria?.Nombre ?? "Sin categoría")</span>
+                        <h4 class="text-dark">S/ @producto.Precio.ToString("F2")</h4>
+                    </div>
+                </div>
+
+                <h6 class="mt-3 text-secondary">Variantes disponibles:</h6>
+                @if (producto.Variantes.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm align-middle mt-2">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Talla</th>
+                                    <th>Color</th>
+                                    <th>Stock</th>
+                                    <th style="width: 260px;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var variante in producto.Variantes)
+                                {
+                                    <tr>
+                                        <td><span class="badge bg-secondary">@(variante.Talla?.Nombre ?? "N/A")</span></td>
+                                        <td><span class="badge bg-info text-dark">@(variante.Color?.Nombre ?? "N/A")</span></td>
+                                        <td>
+                                            @if (variante.Stock > 0)
+                                            {
+                                                <span class="badge bg-success">@variante.Stock disponibles</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Agotado</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (variante.Stock > 0)
+                                            {
+                                                <form method="post" asp-page-handler="Agregar" class="d-flex align-items-center gap-2">
+                                                    <input type="hidden" name="idVariante" value="@variante.IdVariante" />
+                                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                                        <span class="input-group-text">Cant</span>
+                                                        <input type="number" name="cantidad" value="1" min="1" max="@variante.Stock" class="form-control" />
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        🛒 Agregar
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-secondary btn-sm" disabled>Sin Stock</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small italic">No hay variantes registradas para este producto.</p>
+                }
+            </div>
+        </div>
+    }
 }

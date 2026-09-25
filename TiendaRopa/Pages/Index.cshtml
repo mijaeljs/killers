@@ -1,10 +1,45 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Bienvenido a TiendaRopa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Bienvenido a TiendaRopa</h1>
+        <p class="col-md-8 fs-4 mx-auto text-secondary">
+            Moda, estilo y la mejor calidad en prendas de vestir. Explora nuestra amplia colección y encuentra las prendas perfectas para ti.
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a asp-page="/Productos/Index" class="btn btn-primary btn-lg px-4">Ver Catálogo de Ropa</a>
+            <a asp-page="/Clientes/Registrar" class="btn btn-outline-secondary btn-lg px-4">Registrarme</a>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center mt-5">
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3>👗 Variedad</h3>
+                <p class="text-muted">Prendas con múltiples tallas, colores y disponibilidad inmediata en stock.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3>🛒 Carrito Ágil</h3>
+                <p class="text-muted">Ajusta cantidades al instante y revisa tu total en tiempo real.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h3>📦 Seguimiento</h3>
+                <p class="text-muted">Consulta tu historial de pedidos y el estado de entrega en cualquier momento.</p>
+            </div>
+        </div>
+    </div>
 </div>

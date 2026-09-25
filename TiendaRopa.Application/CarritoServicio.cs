@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TiendaRopa.Domain;
 using TiendaRopa.Infraestructura;
 
@@ -29,6 +29,11 @@ public class CarritoServicio
         await _context.SaveChangesAsync();
 
         return cliente;
+    }
+
+    public async Task<Cliente?> ObtenerClienteAsync(int idCliente)
+    {
+        return await _context.Clientes.FindAsync(idCliente);
     }
 
     // Obtener el carrito activo con sus ítems, producto, talla y color
@@ -96,5 +101,30 @@ public class CarritoServicio
             _context.ItemsCarrito.Remove(item);
             await _context.SaveChangesAsync();
         }
+    }
+
+    // Actualizar cantidad de un ítem validando stock
+    public async Task<(bool Exito, string Mensaje)> ActualizarCantidadAsync(int idItemCarrito, int nuevaCantidad)
+    {
+        if (nuevaCantidad < 1)
+            return (false, "La cantidad mínima es 1.");
+
+        var item = await _context.ItemsCarrito
+            .Include(i => i.Variante)
+            .FirstOrDefaultAsync(i => i.IdItemCarrito == idItemCarrito);
+
+        if (item == null)
+            return (false, "El ítem no existe en el carrito.");
+
+        if (item.Variante == null)
+            return (false, "La variante del producto no fue encontrada.");
+
+        if (nuevaCantidad > item.Variante.Stock)
+            return (false, $"Stock insuficiente. Solo quedan {item.Variante.Stock} unidades disponibles.");
+
+        item.Cantidad = nuevaCantidad;
+        await _context.SaveChangesAsync();
+
+        return (true, "Cantidad actualizada correctamente.");
     }
 }

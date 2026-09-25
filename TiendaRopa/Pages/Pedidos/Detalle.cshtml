@@ -1,0 +1,102 @@
+@page "{id:int}"
+@model TiendaRopa.Pages.Pedidos.DetalleModel
+@{
+    ViewData["Title"] = $"Detalle del Pedido #{Model.Pedido?.IdPedido.ToString("D4")}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Pedido #@Model.Pedido?.IdPedido.ToString("D4")</h2>
+    <div>
+        <a asp-page="Index" class="btn btn-outline-secondary">← Volver a Mis Pedidos</a>
+        <a asp-page="/Productos/Index" class="btn btn-outline-primary ms-2">Seguir Comprando</a>
+    </div>
+</div>
+
+@if (Model.Pedido != null)
+{
+    <div class="row">
+        <!-- Resumen de Pedido y Cliente -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Información del Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Fecha:</strong> @Model.Pedido.FechaPedido.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p>
+                        <strong>Estado:</strong>
+                        @switch (Model.Pedido.Estado.ToLower())
+                        {
+                            case "pendiente":
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                break;
+                            case "preparando":
+                                <span class="badge bg-info text-dark">Preparando</span>
+                                break;
+                            case "listo":
+                                <span class="badge bg-primary">Listo</span>
+                                break;
+                            case "entregado":
+                                <span class="badge bg-success">Entregado</span>
+                                break;
+                            case "cancelado":
+                                <span class="badge bg-danger">Cancelado</span>
+                                break;
+                            default:
+                                <span class="badge bg-secondary">@Model.Pedido.Estado</span>
+                                break;
+                        }
+                    </p>
+                    <hr />
+                    <h6>Datos de Entrega:</h6>
+                    <p class="mb-1"><strong>Cliente:</strong> @Model.Pedido.Cliente?.Nombre</p>
+                    <p class="mb-1"><strong>Correo:</strong> @Model.Pedido.Cliente?.Correo</p>
+                    <p class="mb-1"><strong>Teléfono:</strong> @Model.Pedido.Cliente?.Telefono</p>
+                    <p class="mb-0"><strong>Dirección:</strong> @Model.Pedido.Cliente?.Direccion</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Productos del Detalle -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Prendas Solicitadas</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Talla</th>
+                                    <th>Color</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detalle in Model.Pedido.Detalles)
+                                {
+                                    var subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+                                    <tr>
+                                        <td><strong>@detalle.Variante?.Producto?.Nombre</strong></td>
+                                        <td><span class="badge bg-secondary">@(detalle.Variante?.Talla?.Nombre ?? "N/A")</span></td>
+                                        <td><span class="badge bg-info text-dark">@(detalle.Variante?.Color?.Nombre ?? "N/A")</span></td>
+                                        <td>@detalle.Cantidad</td>
+                                        <td>S/ @detalle.PrecioUnitario.ToString("F2")</td>
+                                        <td><strong>S/ @subtotal.ToString("F2")</strong></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-end p-3">
+                    <h4 class="mb-0">TOTAL: <span class="text-success fw-bold">S/ @Model.Pedido.Total.ToString("F2")</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+}

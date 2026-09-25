@@ -1,0 +1,83 @@
+@page
+@model TiendaRopa.Pages.Pedidos.IndexModel
+@{
+    ViewData["Title"] = "Mis Pedidos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mis Pedidos</h2>
+    <a asp-page="/Productos/Index" class="btn btn-outline-primary">Ver Catálogo</a>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!Model.Pedidos.Any())
+{
+    <div class="card p-4 text-center shadow-sm">
+        <h4 class="text-muted">Aún no has realizado pedidos</h4>
+        <p class="text-secondary">Tus compras confirmadas aparecerán aquí con su estado y detalle.</p>
+        <div>
+            <a asp-page="/Productos/Index" class="btn btn-primary">Ir a la tienda</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>N° Pedido</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th style="width: 150px;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model.Pedidos)
+                {
+                    <tr>
+                        <td><strong>#@pedido.IdPedido.ToString("D4")</strong></td>
+                        <td>@pedido.FechaPedido.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-success fw-bold">S/ @pedido.Total.ToString("F2")</td>
+                        <td>
+                            @switch (pedido.Estado.ToLower())
+                            {
+                                case "pendiente":
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                    break;
+                                case "preparando":
+                                    <span class="badge bg-info text-dark">Preparando</span>
+                                    break;
+                                case "listo":
+                                    <span class="badge bg-primary">Listo</span>
+                                    break;
+                                case "entregado":
+                                    <span class="badge bg-success">Entregado</span>
+                                    break;
+                                case "cancelado":
+                                    <span class="badge bg-danger">Cancelado</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">@pedido.Estado</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <a asp-page="Detalle" asp-route-id="@pedido.IdPedido" class="btn btn-outline-primary btn-sm">
+                                Ver Detalle
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

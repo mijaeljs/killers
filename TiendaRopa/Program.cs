@@ -12,6 +12,10 @@ builder.Services.AddDbContext<TiendaRopaContext>(options =>
     ));
 
 builder.Services.AddScoped<ProductoServicio>();
+builder.Services.AddScoped<CarritoServicio>();
+builder.Services.AddScoped<PedidoServicio>();
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TiendaRopa.Infraestructura;
 
@@ -11,9 +12,11 @@ using TiendaRopa.Infraestructura;
 namespace TiendaRopa.Infraestructura.Migrations
 {
     [DbContext(typeof(TiendaRopaContext))]
-    partial class TiendaRopaContextModelSnapshot : ModelSnapshot
+    [Migration("20260925220221_ClientesCarrito")]
+    partial class ClientesCarrito
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,35 +110,6 @@ namespace TiendaRopa.Infraestructura.Migrations
                     b.ToTable("Colores");
                 });
 
-            modelBuilder.Entity("TiendaRopa.Domain.DetallePedido", b =>
-                {
-                    b.Property<int>("IdDetallePedido")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDetallePedido"));
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdPedido")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdVariante")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PrecioUnitario")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("IdDetallePedido");
-
-                    b.HasIndex("IdPedido");
-
-                    b.HasIndex("IdVariante");
-
-                    b.ToTable("DetallesPedido");
-                });
-
             modelBuilder.Entity("TiendaRopa.Domain.ItemCarrito", b =>
                 {
                     b.Property<int>("IdItemCarrito")
@@ -160,34 +134,6 @@ namespace TiendaRopa.Infraestructura.Migrations
                     b.HasIndex("IdVariante");
 
                     b.ToTable("ItemsCarrito");
-                });
-
-            modelBuilder.Entity("TiendaRopa.Domain.Pedido", b =>
-                {
-                    b.Property<int>("IdPedido")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPedido"));
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaPedido")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("IdCliente")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("IdPedido");
-
-                    b.HasIndex("IdCliente");
-
-                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("TiendaRopa.Domain.Producto", b =>
@@ -278,25 +224,6 @@ namespace TiendaRopa.Infraestructura.Migrations
                     b.Navigation("Cliente");
                 });
 
-            modelBuilder.Entity("TiendaRopa.Domain.DetallePedido", b =>
-                {
-                    b.HasOne("TiendaRopa.Domain.Pedido", "Pedido")
-                        .WithMany("Detalles")
-                        .HasForeignKey("IdPedido")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TiendaRopa.Domain.ProductoVariante", "Variante")
-                        .WithMany()
-                        .HasForeignKey("IdVariante")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pedido");
-
-                    b.Navigation("Variante");
-                });
-
             modelBuilder.Entity("TiendaRopa.Domain.ItemCarrito", b =>
                 {
                     b.HasOne("TiendaRopa.Domain.Carrito", "Carrito")
@@ -314,17 +241,6 @@ namespace TiendaRopa.Infraestructura.Migrations
                     b.Navigation("Carrito");
 
                     b.Navigation("Variante");
-                });
-
-            modelBuilder.Entity("TiendaRopa.Domain.Pedido", b =>
-                {
-                    b.HasOne("TiendaRopa.Domain.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("IdCliente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("TiendaRopa.Domain.Producto", b =>
@@ -383,11 +299,6 @@ namespace TiendaRopa.Infraestructura.Migrations
             modelBuilder.Entity("TiendaRopa.Domain.Color", b =>
                 {
                     b.Navigation("Variantes");
-                });
-
-            modelBuilder.Entity("TiendaRopa.Domain.Pedido", b =>
-                {
-                    b.Navigation("Detalles");
                 });
 
             modelBuilder.Entity("TiendaRopa.Domain.Producto", b =>
