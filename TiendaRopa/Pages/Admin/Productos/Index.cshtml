@@ -1,0 +1,124 @@
+@page
+@model TiendaRopa.Pages.Admin.Productos.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Gestión de Productos";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h1 class="admin-header-title">Catálogo de Productos</h1>
+        <p class="admin-header-sub">Administración central de prendas, precios y asignación de variantes</p>
+    </div>
+    <a asp-page="Crear" class="btn btn-primary d-inline-flex align-items-center gap-1">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        + Nuevo Producto
+    </a>
+</div>
+
+<!-- Filtros y Búsqueda -->
+<div class="admin-card p-3 mb-4">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-12 col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-white">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </span>
+                <input type="text" asp-for="Buscar" class="form-control" placeholder="Buscar por nombre o descripción..." />
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <select asp-for="IdCategoria" asp-items="Model.CategoriasFiltro" class="form-select">
+                <option value="">-- Todas las Categorías --</option>
+            </select>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+            @if (!string.IsNullOrEmpty(Model.Buscar) || Model.IdCategoria.HasValue)
+            {
+                <a asp-page="Index" class="btn btn-outline-secondary">Limpiar</a>
+            }
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Productos -->
+<div class="admin-card">
+    @if (!Model.Productos.Any())
+    {
+        <div class="alert alert-info mb-0">
+            No se encontraron productos registrados con los filtros aplicados.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 70px;">ID</th>
+                        <th>Producto</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Variantes</th>
+                        <th>Stock Total</th>
+                        <th style="width: 240px;" class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Productos)
+                    {
+                        var totalStock = p.Variantes.Sum(v => v.Stock);
+                        <tr>
+                            <td><span class="badge bg-light text-dark border">#@p.IdProducto</span></td>
+                            <td>
+                                <div><strong class="text-dark">@p.Nombre</strong></div>
+                                <small class="text-muted text-truncate d-inline-block" style="max-width: 280px;">@p.Descripcion</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@(p.Categoria?.Nombre ?? "Sin categoría")</span>
+                            </td>
+                            <td class="text-success fw-bold">
+                                S/ @p.Precio.ToString("F2")
+                            </td>
+                            <td>
+                                <a asp-page="/Admin/Variantes/Index" asp-route-idProducto="@p.IdProducto" class="badge bg-primary text-decoration-none">
+                                    🧩 @p.Variantes.Count variante(s)
+                                </a>
+                            </td>
+                            <td>
+                                @if (totalStock == 0)
+                                {
+                                    <span class="badge bg-danger">Sin stock</span>
+                                }
+                                else if (totalStock <= 5)
+                                {
+                                    <span class="badge bg-warning text-dark">Bajo (@totalStock un.)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@totalStock un.</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+                                    <a asp-page="/Admin/Variantes/Index" asp-route-idProducto="@p.IdProducto" class="btn btn-sm btn-outline-info" title="Administrar variantes">
+                                        Variantes
+                                    </a>
+                                    <a asp-page="Editar" asp-route-id="@p.IdProducto" class="btn btn-sm btn-outline-secondary" title="Editar producto">
+                                        Editar
+                                    </a>
+                                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.IdProducto" onsubmit="return confirm('¿Está seguro de eliminar este producto y sus variantes?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar producto">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

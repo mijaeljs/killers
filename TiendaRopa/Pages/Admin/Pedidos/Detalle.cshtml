@@ -1,0 +1,140 @@
+@page "{id:int}"
+@model TiendaRopa.Pages.Admin.Pedidos.DetalleModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Detalle del Pedido #{Model.Pedido?.IdPedido.ToString("D4")}";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <div class="d-flex align-items-center gap-2">
+            <h1 class="admin-header-title">Pedido #@Model.Pedido?.IdPedido.ToString("D4")</h1>
+            @switch (Model.Pedido?.Estado.ToLower())
+            {
+                case "pendiente":
+                    <span class="badge bg-warning text-dark fs-6">Pendiente</span>
+                    break;
+                case "preparando":
+                    <span class="badge bg-info text-dark fs-6">Preparando</span>
+                    break;
+                case "listo":
+                    <span class="badge bg-primary fs-6">Listo</span>
+                    break;
+                case "entregado":
+                    <span class="badge bg-success fs-6">Entregado</span>
+                    break;
+                case "cancelado":
+                    <span class="badge bg-danger fs-6">Cancelado</span>
+                    break;
+                default:
+                    <span class="badge bg-secondary fs-6">@Model.Pedido?.Estado</span>
+                    break;
+            }
+        </div>
+        <p class="admin-header-sub">Fecha de Registro: @Model.Pedido?.FechaPedido.ToString("dd/MM/yyyy HH:mm:ss")</p>
+    </div>
+    <a asp-page="Index" class="btn btn-outline-secondary">← Volver a Pedidos</a>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Información del Cliente -->
+    <div class="col-12 col-md-5">
+        <div class="admin-card h-100">
+            <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Información del Cliente</h5>
+            <div class="mb-2">
+                <span class="text-muted small d-block">Nombre del Comprador:</span>
+                <strong class="text-dark fs-6">@Model.Pedido?.Cliente?.Nombre</strong>
+            </div>
+            <div class="mb-2">
+                <span class="text-muted small d-block">Correo Electrónico:</span>
+                <span class="text-dark">@Model.Pedido?.Cliente?.Correo</span>
+            </div>
+            <div class="mb-2">
+                <span class="text-muted small d-block">Teléfono:</span>
+                <span class="text-dark">@(string.IsNullOrEmpty(Model.Pedido?.Cliente?.Telefono) ? "No especificado" : Model.Pedido?.Cliente?.Telefono)</span>
+            </div>
+            <div class="mb-2">
+                <span class="text-muted small d-block">Dirección de Entrega:</span>
+                <span class="text-dark">@(string.IsNullOrEmpty(Model.Pedido?.Cliente?.Direccion) ? "Recojo en tienda" : Model.Pedido?.Cliente?.Direccion)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cambio de Estado del Pedido -->
+    <div class="col-12 col-md-7">
+        <div class="admin-card h-100">
+            <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Gestión del Estado del Pedido</h5>
+            <p class="text-muted small">Actualice el estado para mantener informado al cliente y al equipo de despacho.</p>
+
+            <form method="post" asp-page-handler="CambiarEstado">
+                <input type="hidden" name="idPedido" value="@Model.Pedido?.IdPedido" />
+                <div class="row g-2 align-items-center">
+                    <div class="col-8">
+                        <select name="nuevoEstado" class="form-select">
+                            <option value="Pendiente" selected="@(Model.Pedido?.Estado == "Pendiente")">Pendiente (Por confirmar)</option>
+                            <option value="Preparando" selected="@(Model.Pedido?.Estado == "Preparando")">Preparando (En empaque)</option>
+                            <option value="Listo" selected="@(Model.Pedido?.Estado == "Listo")">Listo (Empacado para despacho)</option>
+                            <option value="Entregado" selected="@(Model.Pedido?.Estado == "Entregado")">Entregado (Concretado)</option>
+                            <option value="Cancelado" selected="@(Model.Pedido?.Estado == "Cancelado")">Cancelado (Anular pedido)</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Actualizar Estado
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="alert alert-light border mt-3 mb-0 small">
+                <strong>Nota:</strong> Los pedidos confirmados descontaron automáticamente el stock de la base de datos al ser generados por el cliente.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de Productos del Pedido -->
+<div class="admin-card">
+    <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Prendas y Variantes Solicitadas</h5>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Producto</th>
+                    <th>Talla</th>
+                    <th>Color</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Precio Unitario</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detalle in Model.Pedido?.Detalles ?? Enumerable.Empty<TiendaRopa.Domain.DetallePedido>())
+                {
+                    var subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+                    <tr>
+                        <td>
+                            <strong class="text-dark">@detalle.Variante?.Producto?.Nombre</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border fs-6">@(detalle.Variante?.Talla?.Nombre ?? "N/A")</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-info text-dark fs-6">@(detalle.Variante?.Color?.Nombre ?? "N/A")</span>
+                        </td>
+                        <td class="text-center fw-bold">@detalle.Cantidad</td>
+                        <td class="text-end">S/ @detalle.PrecioUnitario.ToString("F2")</td>
+                        <td class="text-end fw-bold text-success">S/ @subtotal.ToString("F2")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot class="table-light">
+                <tr>
+                    <td colspan="5" class="text-end fw-bold fs-5">Total a Pagar:</td>
+                    <td class="text-end fw-bold text-success fs-5">S/ @(Model.Pedido?.Total.ToString("F2") ?? "0.00")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

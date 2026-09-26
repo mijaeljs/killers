@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,8 +30,16 @@ public class TiendaRopaContext : DbContext
     public DbSet<Pedido> Pedidos { get; set; }
     public DbSet<DetallePedido> DetallesPedido { get; set; }
 
+    // Módulo Administración
+    public DbSet<Administrador> Administradores { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Administrador>(entity =>
+        {
+            entity.HasIndex(a => a.Usuario).IsUnique();
+            entity.HasIndex(a => a.Correo).IsUnique();
+        });
         modelBuilder.Entity<Producto>()
             .HasOne(p => p.Categoria)
             .WithMany(c => c.Productos)

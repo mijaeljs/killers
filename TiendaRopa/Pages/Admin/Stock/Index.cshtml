@@ -1,0 +1,148 @@
+@page
+@model TiendaRopa.Pages.Admin.Stock.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Control de Stock";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h1 class="admin-header-title">Control de Stock e Inventario</h1>
+        <p class="admin-header-sub">Supervisión en tiempo real de existencias por prenda, talla y color</p>
+    </div>
+    <a asp-page="/Admin/Variantes/Crear" class="btn btn-primary d-inline-flex align-items-center gap-1">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        + Nueva Variante
+    </a>
+</div>
+
+<!-- Tarjetas Resumen de Inventario -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-3 h-100">
+            <span class="text-muted small fw-semibold text-uppercase">Total en Almacén</span>
+            <h4 class="fw-bold text-dark mt-1 mb-0">@Model.TotalUnidadesEnAlmacen <small class="fs-6 text-muted">unidades</small></h4>
+            <small class="text-secondary">@Model.TotalPrendas combinaciones</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-3 h-100">
+            <span class="text-muted small fw-semibold text-uppercase">Stock Normal</span>
+            <h4 class="fw-bold text-success mt-1 mb-0">@(Model.TotalPrendas - Model.CantidadStockBajo - Model.CantidadSinStock)</h4>
+            <small class="text-muted">&gt; 5 unidades en almacén</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-3 h-100">
+            <span class="text-muted small fw-semibold text-uppercase">Stock Bajo</span>
+            <h4 class="fw-bold text-warning mt-1 mb-0">@Model.CantidadStockBajo</h4>
+            <small class="text-muted">Entre 1 y 5 unidades</small>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-3 h-100">
+            <span class="text-muted small fw-semibold text-uppercase">Agotados</span>
+            <h4 class="fw-bold text-danger mt-1 mb-0">@Model.CantidadSinStock</h4>
+            <small class="text-muted">0 unidades disponibles</small>
+        </div>
+    </div>
+</div>
+
+<!-- Filtros y Búsqueda -->
+<div class="admin-card p-3 mb-4">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-12 col-md-6">
+            <input type="text" asp-for="Buscar" class="form-control" placeholder="Buscar por prenda, talla o color..." />
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <select asp-for="EstadoFiltro" class="form-select">
+                <option value="">-- Todos los estados de Stock --</option>
+                <option value="normal">Solo Stock Normal (&gt; 5)</option>
+                <option value="bajo">Solo Stock Bajo (1 - 5)</option>
+                <option value="agotado">Solo Agotados (0)</option>
+            </select>
+        </div>
+        <div class="col-12 col-sm-6 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-dark w-100">Filtrar</button>
+            @if (!string.IsNullOrEmpty(Model.Buscar) || !string.IsNullOrEmpty(Model.EstadoFiltro))
+            {
+                <a asp-page="Index" class="btn btn-outline-secondary">Limpiar</a>
+            }
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Control de Stock -->
+<div class="admin-card">
+    @if (!Model.Variantes.Any())
+    {
+        <div class="alert alert-info mb-0">
+            No se encontraron prendas que coincidan con los filtros aplicados.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Talla</th>
+                        <th>Color</th>
+                        <th>Estado de Stock</th>
+                        <th style="width: 280px;">Ajuste Rápido de Stock</th>
+                        <th class="text-end">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model.Variantes)
+                    {
+                        <tr>
+                            <td>
+                                <div><strong class="text-dark">@v.Producto?.Nombre</strong></div>
+                                <small class="text-muted">@(v.Producto?.Categoria?.Nombre ?? "Sin categoría")</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border fs-6">@(v.Talla?.Nombre ?? "N/A")</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info text-dark fs-6">@(v.Color?.Nombre ?? "N/A")</span>
+                            </td>
+                            <td>
+                                @if (v.Stock == 0)
+                                {
+                                    <span class="badge bg-danger p-2">Sin stock (0)</span>
+                                }
+                                else if (v.Stock <= 5)
+                                {
+                                    <span class="badge bg-warning text-dark p-2">Stock bajo (@v.Stock)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success p-2">Stock normal (@v.Stock)</span>
+                                }
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="ActualizarStock" class="d-flex align-items-center gap-2">
+                                    <input type="hidden" name="idVariante" value="@v.IdVariante" />
+                                    <div class="input-group input-group-sm" style="max-width: 140px;">
+                                        <span class="input-group-text">Cant</span>
+                                        <input type="number" name="nuevoStock" value="@v.Stock" min="0" class="form-control" />
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">
+                                        Guardar
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-end">
+                                <a asp-page="/Admin/Variantes/Editar" asp-route-id="@v.IdVariante" class="btn btn-sm btn-outline-secondary">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

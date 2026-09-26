@@ -1,0 +1,106 @@
+@page
+@model TiendaRopa.Pages.Admin.Configuracion.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Configuración de la Tienda";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="admin-header-title">Configuración General</h1>
+        <p class="admin-header-sub">Información comercial, parámetros de operación y estado del sistema</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Información de Tienda -->
+    <div class="col-12 col-lg-7">
+        <div class="admin-card">
+            <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Información de la Tienda</h5>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold text-uppercase">Nombre Comercial</label>
+                <div class="form-control bg-light">@Model.NombreTienda</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold text-uppercase">Descripción</label>
+                <div class="form-control bg-light" style="min-height: 70px;">@Model.Descripcion</div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-muted small fw-bold text-uppercase">Correo de Atención</label>
+                    <div class="form-control bg-light">@Model.Correo</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-muted small fw-bold text-uppercase">Teléfono de Soporte</label>
+                    <div class="form-control bg-light">@Model.Telefono</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold text-uppercase">Dirección Física de la Tienda</label>
+                <div class="form-control bg-light">@Model.Direccion</div>
+            </div>
+
+            <div class="mb-0">
+                <label class="form-label text-muted small fw-bold text-uppercase">Moneda de Transacción</label>
+                <div class="form-control bg-light">@Model.Moneda</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado Técnico y Perfil -->
+    <div class="col-12 col-lg-5">
+        <div class="admin-card mb-4">
+            <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Conexión del Sistema</h5>
+
+            <div class="mb-3">
+                <span class="text-muted small d-block">Base de Datos:</span>
+                <strong class="text-dark">@Model.BaseDeDatos</strong>
+            </div>
+
+            <div class="mb-3">
+                <span class="text-muted small d-block">Estado de Conexión:</span>
+                @if (Model.EstadoBD)
+                {
+                    <span class="badge bg-success fs-6">
+                        Conectado y Operativo
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger fs-6">
+                        Error de Conexión
+                    </span>
+                }
+            </div>
+
+            <div class="mb-0">
+                <span class="text-muted small d-block">Arquitectura:</span>
+                <span class="badge bg-dark">ASP.NET Core 8 &bull; EF Core Code-First</span>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <h5 class="fw-bold mb-3 text-dark border-bottom pb-2">Sesión Actual</h5>
+
+            <div class="mb-2">
+                <span class="text-muted small d-block">Administrador en Sesión:</span>
+                <strong class="text-dark">@(User.Identity?.Name ?? "Admin")</strong>
+            </div>
+
+            <div class="mb-2">
+                <span class="text-muted small d-block">Mecanismo de Seguridad:</span>
+                <span class="text-dark">Cookie Authentication (8h exp)</span>
+            </div>
+
+            <div class="mt-3 pt-3 border-top text-end">
+                <a asp-page="/Admin/Logout/Index" class="btn btn-outline-danger btn-sm">
+                    Cerrar Sesión Activa
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

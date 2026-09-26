@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TiendaRopa.Infraestructura;
 
@@ -11,9 +12,11 @@ using TiendaRopa.Infraestructura;
 namespace TiendaRopa.Infraestructura.Migrations
 {
     [DbContext(typeof(TiendaRopaContext))]
-    partial class TiendaRopaContextModelSnapshot : ModelSnapshot
+    [Migration("20260926001714_AgregarAdministradores")]
+    partial class AgregarAdministradores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

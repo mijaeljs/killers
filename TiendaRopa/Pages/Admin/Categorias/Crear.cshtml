@@ -1,0 +1,32 @@
+@page
+@model TiendaRopa.Pages.Admin.Categorias.CrearModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Nueva Categoría";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="admin-card">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                <h4 class="fw-bold mb-0 text-dark">Nueva Categoría</h4>
+                <a asp-page="Index" class="btn btn-sm btn-outline-secondary">← Volver al listado</a>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label fw-semibold">Nombre de la Categoría</label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ej: Polos, Casacas, Pantalones, Calzado" autofocus />
+                    <span asp-validation-for="Nombre" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4">Guardar Categoría</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+@page
+@model TiendaRopa.Pages.Admin.Variantes.CrearModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Nueva Variante";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="admin-card">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                <div>
+                    <h4 class="fw-bold mb-0 text-dark">Nueva Variante de Prenda</h4>
+                    <small class="text-muted">Combine Producto + Talla + Color y configure su stock inicial</small>
+                </div>
+                <a asp-page="Index" class="btn btn-sm btn-outline-secondary">← Volver al listado</a>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="IdProducto" class="form-label fw-semibold">Producto</label>
+                    <select asp-for="IdProducto" asp-items="Model.Productos" class="form-select">
+                        <option value="">-- Seleccione un Producto --</option>
+                    </select>
+                    <span asp-validation-for="IdProducto" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label asp-for="IdTalla" class="form-label fw-semibold">Talla</label>
+                        <select asp-for="IdTalla" asp-items="Model.Tallas" class="form-select">
+                            <option value="">-- Seleccione Talla --</option>
+                        </select>
+                        <span asp-validation-for="IdTalla" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label asp-for="IdColor" class="form-label fw-semibold">Color</label>
+                        <select asp-for="IdColor" asp-items="Model.Colores" class="form-select">
+                            <option value="">-- Seleccione Color --</option>
+                        </select>
+                        <span asp-validation-for="IdColor" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Stock" class="form-label fw-semibold">Stock Inicial en Unidades</label>
+                    <input asp-for="Stock" type="number" min="0" class="form-control" />
+                    <span asp-validation-for="Stock" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4">Crear Variante</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

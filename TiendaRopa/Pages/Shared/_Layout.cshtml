@@ -1,65 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TiendaRopa</title>
+    <meta name="description" content="TiendaRopa — Moda, estilo y calidad premium. Explora nuestra colección de prendas con múltiples tallas y colores." />
+    <title>@ViewData["Title"] — TiendaRopa</title>
+
+    <!-- Bootstrap (sólo utilidades grid/spacing que reutiliza el proyecto) -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Diseño público premium -->
+    <link rel="stylesheet" href="~/css/tienda.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TiendaRopa.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">TiendaRopa</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Productos/Index">Catálogo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Carrito/Index">🛒 Carrito</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Pedidos/Index">📦 Mis Pedidos</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-secondary" asp-area="" asp-page="/Clientes/Registrar">Mi Cuenta</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger fw-semibold" asp-area="" asp-page="/Pedidos/Admin/Index">Admin</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  NAVEGACIÓN PÚBLICA — glassmorphism       ║
+     ╚══════════════════════════════════════════╝ -->
+<nav class="tienda-nav" id="tiendaNav">
+    <!-- Brand -->
+    <a asp-page="/Index" class="nav-brand">
+        <span class="nav-brand-dot"></span>
+        TiendaRopa
+    </a>
+
+    <!-- Links (desktop) -->
+    <ul class="nav-links" id="navLinks">
+        <li><a asp-page="/Index">Inicio</a></li>
+        <li><a asp-page="/Productos/Index">Catálogo</a></li>
+        <li><a asp-page="/Pedidos/Index">Mis Pedidos</a></li>
+        <li><a asp-page="/Clientes/Registrar">Mi Cuenta</a></li>
+    </ul>
+
+    <!-- Acciones (desktop) -->
+    <div class="nav-actions">
+        <a asp-page="/Carrito/Index" class="nav-btn-cart">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span class="cart-label">Carrito</span>
+        </a>
+        <a asp-page="/Admin/Index" class="nav-btn-admin">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Admin
+        </a>
+        <!-- Hamburger mobile -->
+        <button class="nav-toggle" id="navToggle" aria-label="Menú" type="button">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
     </div>
+</nav>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - TiendaRopa - <a asp-area="" asp-page="/Privacy">Privacy</a>
+<!-- ╔══════════════════════════════════════════╗
+     ║  CONTENIDO PRINCIPAL                      ║
+     ╚══════════════════════════════════════════╝ -->
+<div class="tienda-wrapper">
+    @RenderBody()
+</div>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  FOOTER                                   ║
+     ╚══════════════════════════════════════════╝ -->
+<footer class="tienda-footer">
+    <div class="container-tienda">
+        <div class="footer-inner">
+            <a asp-page="/Index" class="footer-brand">TiendaRopa</a>
+            <nav class="footer-links">
+                <a asp-page="/Productos/Index">Catálogo</a>
+                <a asp-page="/Carrito/Index">Carrito</a>
+                <a asp-page="/Clientes/Registrar">Cuenta</a>
+                <a asp-page="/Privacy">Privacidad</a>
+            </nav>
+            <span>&copy; @DateTime.Now.Year TiendaRopa — Todos los derechos reservados</span>
         </div>
-    </footer>
+    </div>
+</footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<!-- Scripts -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+<script>
+    /* ── Scroll effect on navbar ── */
+    const nav = document.getElementById('tiendaNav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    /* ── Mobile toggle ── */
+    const navToggle = document.getElementById('navToggle');
+    const navLinks  = document.getElementById('navLinks');
+    navToggle?.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+    });
+    /* Close on outside click */
+    document.addEventListener('click', e => {
+        if (!nav.contains(e.target)) navLinks.classList.remove('open');
+    });
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
+</html>

@@ -1,45 +1,143 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Bienvenido a TiendaRopa";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold text-primary">Bienvenido a TiendaRopa</h1>
-        <p class="col-md-8 fs-4 mx-auto text-secondary">
-            Moda, estilo y la mejor calidad en prendas de vestir. Explora nuestra amplia colección y encuentra las prendas perfectas para ti.
-        </p>
-        <div class="d-flex justify-content-center gap-3 mt-4">
-            <a asp-page="/Productos/Index" class="btn btn-primary btn-lg px-4">Ver Catálogo de Ropa</a>
-            <a asp-page="/Clientes/Registrar" class="btn btn-outline-secondary btn-lg px-4">Registrarme</a>
-        </div>
-    </div>
-</div>
+<!-- ╔══════════════════════════════════════════╗
+     ║  HERO SECTION                             ║
+     ╚══════════════════════════════════════════╝ -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
 
-<div class="row text-center mt-5">
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h3>👗 Variedad</h3>
-                <p class="text-muted">Prendas con múltiples tallas, colores y disponibilidad inmediata en stock.</p>
+    <div class="container-tienda" style="position:relative;z-index:1;padding-top:2rem;padding-bottom:2rem;">
+        <div class="hero-content">
+            <!-- Tag animado -->
+            <div class="hero-tag">
+                <span class="hero-tag-dot"></span>
+                Nueva Colección 2026
+            </div>
+
+            <!-- Título principal -->
+            <h1 class="hero-title">
+                Tu estilo,<br>
+                <em>sin límites.</em>
+            </h1>
+
+            <!-- Descripción -->
+            <p class="hero-desc">
+                Descubre prendas de alta calidad con múltiples tallas y colores.
+                Moda pensada para cada momento, para cada persona.
+            </p>
+
+            <!-- CTAs -->
+            <div class="hero-actions">
+                <a asp-page="/Productos/Index" class="btn-primary-hero">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    Explorar catálogo
+                </a>
+                <a asp-page="/Clientes/Registrar" class="btn-secondary-hero">
+                    Crear cuenta
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="hero-stats">
+                <div>
+                    <div class="hero-stat-value">500+</div>
+                    <div class="hero-stat-label">Prendas disponibles</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">12</div>
+                    <div class="hero-stat-label">Categorías</div>
+                </div>
+                <div>
+                    <div class="hero-stat-value">100%</div>
+                    <div class="hero-stat-label">Calidad garantizada</div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h3>🛒 Carrito Ágil</h3>
-                <p class="text-muted">Ajusta cantidades al instante y revisa tu total en tiempo real.</p>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  FEATURES                                 ║
+     ╚══════════════════════════════════════════╝ -->
+<section class="section" style="padding-top:3.5rem;">
+    <div class="container-tienda">
+        <div class="section-header">
+            <span class="section-tag">¿Por qué TiendaRopa?</span>
+            <h2 class="section-title">Comprar nunca fue tan fácil</h2>
+            <p class="section-sub">Diseñamos cada experiencia para que encuentres lo que buscas rápido y con confianza.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Gran Variedad</div>
+                <p class="feature-desc">Cientos de prendas con múltiples tallas, colores y combinaciones para cada gusto.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Carrito Ágil</div>
+                <p class="feature-desc">Agrega productos al carrito en segundos, ajusta cantidades y revisa tu total en tiempo real.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Compra Segura</div>
+                <p class="feature-desc">Tus datos y pedidos están protegidos. Compra con total tranquilidad en nuestra plataforma.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Seguimiento</div>
+                <p class="feature-desc">Consulta el estado de tus pedidos en todo momento desde tu historial personal.</p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card p-3 border-0 shadow-sm h-100">
-            <div class="card-body">
-                <h3>📦 Seguimiento</h3>
-                <p class="text-muted">Consulta tu historial de pedidos y el estado de entrega en cualquier momento.</p>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  BANNER PROMOCIONAL                       ║
+     ╚══════════════════════════════════════════╝ -->
+<section class="section" style="padding-top:0;">
+    <div class="container-tienda">
+        <div class="coleccion-banner">
+            <div class="coleccion-banner-content">
+                <h2>Nueva Colección<br><em style="font-style:italic;color:#c084fc;">Primavera–Verano</em></h2>
+                <p>Las prendas más frescas y modernas ya están disponibles. Encuentra tu talla y color favorito.</p>
+                <a asp-page="/Productos/Index" class="btn-primary-hero" style="background:#c084fc;box-shadow:none;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                    Ver colección
+                </a>
             </div>
         </div>
     </div>
-</div>
+</section>
+
